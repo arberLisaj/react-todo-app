@@ -1,20 +1,26 @@
 import { useEffect, useState } from "react";
+import { FiDelete } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
-import { AiTwotoneDelete } from "react-icons/ai";
+import "../styles/styles.css";
+import TodoHeader from "./TodoHeader";
+
 interface Todo {
   id: number;
   text: string;
+  completed?: boolean;
 }
+
 const TodoList = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [inputValue, setInputValue] = useState("");
+  const [todos, setTodos] = useState<Todo[]>(() => {
+    const localValue = localStorage.getItem("todos");
+    if (localValue == null) return;
+    return JSON.parse(localValue);
+  });
   useEffect(() => {
-    let lcs = localStorage.getItem("todos");
-    if (lcs) {
-      const storedTodos = JSON.parse(lcs);
-      setTodos(storedTodos);
-    }
-  }, []);
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+  const [inputValue, setInputValue] = useState("");
   // handling the input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -25,15 +31,12 @@ const TodoList = () => {
     if (inputValue.trim() === "") {
       return;
     }
-    // creating a new Todo
-    const newTodo: Todo = {
-      // building unique id :)))
-      id: Math.random() * 123456789,
-      text: inputValue,
-    };
-    setTodos([...todos, newTodo]);
-    localStorage.setItem("todos", JSON.stringify([...todos, newTodo]));
-    // clearing the input
+    setTodos((currentTodos) => {
+      return [
+        ...currentTodos,
+        { id: Math.random() * 1234, text: inputValue, completed: false },
+      ];
+    });
     setInputValue("");
   };
 
@@ -44,16 +47,29 @@ const TodoList = () => {
     setTodos(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
+  const toggleTodo = (id: number, completed: boolean) => {
+    setTodos((currentTodos) => {
+      return currentTodos.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, completed };
+        }
+        return todo;
+      });
+    });
+  };
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleAddTodo();
     }
   };
+
+  const filteredTodos = todos.filter((todo) => todo.completed !== false);
   return (
     <section id="todoList">
+      <TodoHeader currentTodos={filteredTodos.length} allTodos={todos.length} />
       <div className="input">
         <input
-        placeholder="add a todo..."
+          placeholder="add a todo..."
           type="text"
           value={inputValue}
           onKeyDown={handleKeyDown}
@@ -64,15 +80,34 @@ const TodoList = () => {
         </button>
       </div>
       <ul>
+        {todos.length == 0 && (
+          <p
+            style={{
+              textAlign: "center",
+              padding: "10px",
+              borderBottom: "1px solid gainsboro",
+            }}
+          >
+            Add your first todo {":)"}
+          </p>
+        )}
         {todos.map((todo, index) => (
           // we render each todo
           <li key={index}>
-            {todo.text}
+            <span className={todo.completed ? "completed" : ""}>
+              <input
+                id="checkbox"
+                type="checkbox"
+                checked={todo.completed}
+                onChange={(e) => toggleTodo(todo.id, e.target.checked)}
+              />
+              {todo.text}
+            </span>
             <button
               className="danger"
               onClick={() => handleDeleteTodo(todo.id)}
             >
-              <AiTwotoneDelete />
+              <FiDelete />
             </button>
           </li>
         ))}
@@ -80,4 +115,5 @@ const TodoList = () => {
     </section>
   );
 };
+
 export default TodoList;

@@ -1,25 +1,37 @@
-// style this shit propperly
 $white: white;
-$danger-clr: red;
+$danger-clr: rgba(255, 0, 0, 0.549);
 $light-gray: gainsboro;
+$input-background: #e0e0e0;
+
+// writing all styles in one single page
 section#todoList {
   width: 90%;
   max-width: 600px;
   margin: 20px auto;
   background-color: $white;
-  padding: 20px 13px 20px 20px;
+  padding: 20px;
   border-radius: 10px;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 5px 25px;
+    align-items: center;
+  }
 
   .input {
     display: flex;
+    flex-direction: row-reverse;
+    background-color: $input-background;
+    padding-block: 5px;
     input {
       width: 100%;
       border: none;
-      padding: 5px;
+      padding: 5px 10px;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
         sans-serif;
-      background: #e0e0e0;
+      background: $input-background;
       &:focus {
         outline: none;
       }
@@ -29,7 +41,9 @@ section#todoList {
     button {
       background-color: transparent;
       border: none;
-      font-size: 35px;
+      border-right: 1px solid white;
+      padding-right: 5px;
+      font-size: 30px;
       display: grid;
       place-content: center;
       margin-left: 5px;
@@ -46,16 +60,33 @@ section#todoList {
       padding-block: 7px;
       display: flex;
       align-items: center;
+      font-size: 17px;
 
       button {
+        padding: 4px;
         display: flex;
         align-items: center;
         background-color: transparent;
-        margin-left: 5px;
+        margin-left: auto;
         border: none;
-        font-size: 28px;
+        font-size: 20px;
         cursor: pointer;
         color: $danger-clr;
+      }
+      span {
+        word-break: break-all;
+      }
+      #checkbox {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        position: relative;
+        top: 4px;
+        margin-right: 10px;
+      }
+
+      .completed{
+        text-decoration: line-through;
       }
     }
   }
