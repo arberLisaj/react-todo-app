@@ -65,7 +65,9 @@ const TodoList = () => {
     }
   };
 
-  const filteredTodos = todos.filter((todo) => todo.completed !== false);
+  const filteredTodos = todos
+    ? todos.filter((todo) => todo.completed !== false)
+    : [];
   return (
     <section id="todoList">
       <TodoHeader currentTodos={filteredTodos.length} allTodos={todos.length} />
