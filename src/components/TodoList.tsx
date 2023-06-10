@@ -12,11 +12,9 @@ interface Todo {
 
 const TodoList = () => {
   const [todos, setTodos] = useState<Todo[]>(() => {
-    if (localStorage.getItem("todos")) {
-      const localValue = localStorage.getItem("todos");
-      if (localValue == null) return;
-      return JSON.parse(localValue);
-    }
+    const localValue = localStorage.getItem("todos");
+    if (localValue == null) return [];
+    return JSON.parse(localValue);
   });
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
