@@ -1,4 +1,4 @@
-# react-todo-app
+# React Todo App 📝
 View Live Demo : https://arberlisaj.github.io/react-todo-app/
 
 ##  Features:
